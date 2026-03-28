@@ -165,3 +165,132 @@ def deduplicate_papers(papers: List[Dict]) -> List[Dict]:
             unique_papers.append(paper)
     
     return unique_papers
+    
+def generate_briefing(papers: List[Dict]) -> str:
+    """生成论文简报"""
+    lines = []
+    lines.append("📚 **Agent论文选读** | 全网检索")
+    lines.append("")
+    lines.append(f"⏰ {datetime.now().strftime('%H:%M')} 更新 · 🔍 找到{len(papers)}篇相关论文")
+    lines.append("")
+    lines.append("━━━━━━━━━")
+    lines.append("")
+    
+    if not papers:
+        lines.append("⚠️ **未找到Agent相关论文**")
+        lines.append("")
+        lines.append("💡 可能原因：")
+        lines.append("• 搜索服务暂时不可用")
+        lines.append("• 近期论文较少")
+        lines.append("• 关键词需要调整")
+    else:
+        # 按分类分组
+        categorized = {}
+        for paper in papers:
+            cat = categorize_paper(paper)
+            if cat not in categorized:
+                categorized[cat] = []
+            categorized[cat].append(paper)
+        
+        # 按必读/选读/速览分级
+        must_read = []
+        optional = []
+        quick_view = []
+        
+        for cat, cat_papers in categorized.items():
+            if cat in ['skill_evolution', 'multi_agent']:
+                must_read.extend(cat_papers[:2])
+            elif cat in ['reasoning', 'memory', 'safety', 'evaluation']:
+                optional.extend(cat_papers[:2])
+            else:
+                quick_view.extend(cat_papers[:1])
+        
+        # 输出必读
+        if must_read:
+            lines.append(f"🔴 **必读推荐 · {len(must_read)}篇**")
+            lines.append("")
+            for paper in must_read[:3]:
+                title = paper.get('title', 'N/A')
+                url = paper.get('url', '')
+                summary = generate_one_liner(paper)
+                
+                lines.append(f"▸ **{title}**")
+                if summary:
+                    lines.append(f"  {summary}")
+                if url:
+                    lines.append(f"  🔗 {url}")
+                lines.append("")
+        
+        # 输出选读
+        if optional:
+            lines.append("━━━━━━━━━")
+            lines.append("")
+            lines.append(f"🟡 **选读推荐 · {len(optional)}篇**")
+            lines.append("")
+            for paper in optional[:3]:
+                title = paper.get('title', 'N/A')
+                url = paper.get('url', '')
+                summary = generate_one_liner(paper)
+                
+                lines.append(f"▸ **{title}**")
+                if summary:
+                    lines.append(f"  {summary}")
+                if url:
+                    lines.append(f"  🔗 {url}")
+                lines.append("")
+        
+        # 输出速览
+        if quick_view:
+            lines.append("━━━━━━━━━")
+            lines.append("")
+            lines.append(f"🟢 **速览 · {len(quick_view)}篇**")
+            lines.append("")
+            for paper in quick_view[:4]:
+                title = paper.get('title', 'N/A')
+                lines.append(f"• {title}")
+    
+    lines.append("")
+    lines.append("━━━━━━━━━")
+    lines.append("")
+    lines.append("🔨 由 Agent Paper Digest + StepFun Search 技能生成")
+    lines.append("🦞 老罗 · 每日自动检索推送")
+    
+    return '
+'.join(lines)
+def main():
+    """主函数"""
+    print("🔍 开始全网搜索Agent相关论文...")
+    
+    all_papers = []
+    
+    # 使用多个查询搜索
+    for query in SEARCH_QUERIES:
+        print(f"  搜索: {query[:50]}...")
+        papers = search_papers(query, n=5)
+        all_papers.extend(papers)
+        print(f"    找到 {len(papers)} 篇")
+    
+    # 去重
+    unique_papers = deduplicate_papers(all_papers)
+    print(f"✅ 共找到 {len(unique_papers)} 篇相关论文（已去重）")
+    
+    # 生成简报
+    briefing = generate_briefing(unique_papers)
+    
+    # 保存到文件
+    output_file = f"/Users/jyxc-dz-0100378/.stepclaw/workspace/agent_papers_search_{datetime.now().strftime('%Y%m%d_%H%M')}.md"
+    with open(output_file, 'w', encoding='utf-8') as f:
+        f.write(briefing)
+    
+    print(f"💾 报告已保存至: {output_file}")
+    
+    # 输出简报
+    print("
+" + "="*50)
+    print(briefing)
+    
+    return briefing
+
+
+if __name__ == "__main__":
+    main()
