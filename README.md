@@ -23,6 +23,9 @@
 
 ## 【通过水产市场】安装依赖 Skill
 ```bash
+#agent-paper-digest
+openclawmp install skill/@u-ce6f93e8b7cd47febf93/agent-paper-digest
+#依赖
 openclawmp install skill/step-search
 ```
 
