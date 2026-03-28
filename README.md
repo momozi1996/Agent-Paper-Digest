@@ -22,8 +22,9 @@
 - GitHub仓库: https://github.com/momozi1996/Agent-Paper-Digest
 
 ## 【通过水产市场】安装依赖 Skill
+```bash
 openclawmp install skill/step-search
-
+```
 
 ##  📋 项目文件清单
 | 文件 | 说明 |
