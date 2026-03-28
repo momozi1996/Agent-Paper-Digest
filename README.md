@@ -59,3 +59,31 @@ python3 push_daily.py yuanbao group:YOUR_GROUP_ID
 openclaw cron add --name "Agent论文日报" \
   --schedule "0 21 * * *" \
   --command "python3 ~/.stepclaw/skills/agent-paper-digest/digest_search.py"
+
+
+
+#  📋 项目文件清单
+
+文件     说明
+✅ README.md      项目说明文档
+✅ SKILL.md       OpenClaw Skill 规范
+✅ digest_search.py     🔥 核心搜索脚本
+✅ push_daily.py      日报推送脚本
+✅ digest_v2.py       旧版arXiv API脚本
+✅ digest.py          基础脚本
+✅ run.sh            执行脚本
+✅ LICENSE            MIT许可证
+✅ CHANGELOG.md       版本历史
+✅ CONTRIBUTING.md     贡献指南
+✅ requirements.txt      依赖说明
+✅ .gitignore           Git忽略文件
+✅ .github/workflows/ci.yml     GitHub Actions CI
+
+
+#  🔗 相关链接
+
+- 水产市场: https://openclawmp.cc/asset/s-c7b3862d9422d7cc
+- GitHub仓库: https://github.com/momozi1996/Agent-Paper-Digest
+
+---
+
